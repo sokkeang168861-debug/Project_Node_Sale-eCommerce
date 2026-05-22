@@ -1,30 +1,22 @@
 # Express TypeScript API
 
-Simple backend API using Express.js, TypeScript, dotenv, and Router.
+A simple backend API built with Express.js and TypeScript.
 
 ---
 
 ## Tech Stack
 
-- Node.js
-- Express.js
-- TypeScript
-- dotenv
+- **Node.js**
+- **Express.js**
+- **TypeScript**
+- **dotenv** (for environment variables)
 
 ---
 
 ## Installation
 
-Clone the project:
+### 1. Clone the repository
 
 ```bash
 git clone <your-repository-url>
 cd <project-folder>
-## Installation 
-```bash
-npm init -y
-npm install express @types/express dotenv router
-## Run Typescript 
-```bash
-npm install tsx
-npx tsx src/server.ts
