@@ -1,16 +1,18 @@
-import app from "./app.js";
-import dotenv from "dotenv";
+import express from "express";
+import Database from "./config/db.js";
 
-dotenv.config();
+const app = express();
 
-const PORT = Number(process.env.PORT) || 3000;
-const HOST = process.env.HOST || "localhost";
+const PORT = 3000;
 
-const server = app.listen(PORT, HOST, () => {
-  console.log(`Server is running on http://${HOST}:${PORT}`);
-});
+async function startServer() {
+    const db = await Database.getInstance().connect();
 
-// proper error handling
-server.on("error", (err) => {
-  console.error("Server failed to start:", err);
-});
+    console.log("Database Ready:", db.databaseName);
+
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+startServer();
