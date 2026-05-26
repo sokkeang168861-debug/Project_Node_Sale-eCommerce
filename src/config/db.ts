@@ -1,20 +1,16 @@
-import { Db, MongoClient } from "mongodb";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 class Database {
+
     private static instance: Database;
-    private client: MongoClient;
-    private db!: Db;
 
-    private constructor() {
-        const uri = process.env.MONGO_URI as string;
-
-        this.client = new MongoClient(uri);
-    }
+    private constructor() {}
 
     public static getInstance(): Database {
+
         if (!Database.instance) {
             Database.instance = new Database();
         }
@@ -22,16 +18,22 @@ class Database {
         return Database.instance;
     }
 
-    public async connect(): Promise<Db> {
-        if (!this.db) {
-            await this.client.connect();
+    public async connect(): Promise<void> {
+
+        try {
+
+            await mongoose.connect(
+                `${process.env.MONGO_URI}/${process.env.DB_NAME}`
+            );
 
             console.log("MongoDB Connected");
 
-            this.db = this.client.db(process.env.DB_NAME);
-        }
+        } catch (error) {
 
-        return this.db;
+            console.log(error);
+
+            process.exit(1);
+        }
     }
 }
 
