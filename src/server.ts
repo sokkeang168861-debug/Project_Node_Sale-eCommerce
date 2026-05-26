@@ -1,8 +1,7 @@
-import express from "express";
+import app from "./app.js";
 import Database from "./config/db.js";
 
-const app = express();
-
+const HOST = 'localhost'
 const PORT = 3000;
 
 async function startServer() {

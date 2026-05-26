@@ -28,7 +28,7 @@ class Database {
 
             console.log("MongoDB Connected");
 
-            this.db = this.client.db("mydatabase");
+            this.db = this.client.db(process.env.DB_NAME);
         }
 
         return this.db;

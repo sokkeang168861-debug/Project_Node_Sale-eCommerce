@@ -1,17 +1,10 @@
-import express from "express";
+import express  from "express";
+import router from "./modules/routes";
 const app = express();
+
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-app.get("/hello", (req, res) => {
-  res.send("Hello World!");
-});
-app.get("/world", (req, res) => {
-  res.send("Hello World!1234");
-});
-
+app.use('/api', router);
 
 export default app;
