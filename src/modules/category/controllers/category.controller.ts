@@ -1,24 +1,24 @@
 import { Request, Response } from "express";
 import { BaseController } from "../../../common/controllers/base.controller.js";
-import { UserService } from "../services/user.service.js";
+import { CategoryService } from "../services/category.service.js";
 
-export class UserController extends BaseController {
+export class CategoryController extends BaseController {
 
-    private userService = new UserService();
+    private categoryService = new CategoryService();
 
     // CREATE
     async create(req: Request, res: Response) {
 
         try {
 
-            const user = await this.userService.create(
+            const category = await this.categoryService.create(
                 req.body
             );
 
             return this.success(
                 res,
-                user,
-                "User created successfully",
+                category,
+                "Category created successfully",
                 201
             );
 
@@ -33,12 +33,12 @@ export class UserController extends BaseController {
 
         try {
 
-            const users = await this.userService.findAll();
+            const categories = await this.categoryService.findAll();
 
             return this.success(
                 res,
-                users,
-                "Users fetched successfully"
+                categories,
+                "Categories fetched successfully"
             );
 
         } catch (error) {
@@ -54,17 +54,38 @@ export class UserController extends BaseController {
 
             const id = Number(req.params.id);
 
-            const user = await this.userService.findById(id);
+            const category = await this.categoryService.findById(id);
 
             return this.success(
                 res,
-                user,
-                "User fetched successfully"
+                category,
+                "Category fetched successfully"
             );
 
         } catch (error) {
 
             return this.error(res, error, 404);
+        }
+    }
+
+    // READ BY PARENT ID
+    async findByParentId(req: Request, res: Response) {
+
+        try {
+
+            const parentId = req.query.parent_id ? Number(req.query.parent_id) : null;
+
+            const categories = await this.categoryService.findByParentId(parentId);
+
+            return this.success(
+                res,
+                categories,
+                "Categories fetched successfully"
+            );
+
+        } catch (error) {
+
+            return this.error(res, error);
         }
     }
 
@@ -75,16 +96,16 @@ export class UserController extends BaseController {
 
             const id = Number(req.params.id);
 
-            const updatedUser =
-                await this.userService.update(
+            const updatedCategory =
+                await this.categoryService.update(
                     id,
                     req.body
                 );
 
             return this.success(
                 res,
-                updatedUser,
-                "User updated successfully"
+                updatedCategory,
+                "Category updated successfully"
             );
 
         } catch (error) {
@@ -100,13 +121,12 @@ export class UserController extends BaseController {
 
             const id = Number(req.params.id);
 
-            const result =
-                await this.userService.delete(id);
+            const deletedCategory = await this.categoryService.delete(id);
 
             return this.success(
                 res,
-                result,
-                "User deleted successfully"
+                deletedCategory,
+                "Category deleted successfully"
             );
 
         } catch (error) {
