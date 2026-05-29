@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
 import { BaseController } from "../../user/controllers/base.controller.js";
-import { ProductService } from "../services/products.model.js";
+import { OrderService } from "../services/orders.model.js";
 
-export class ProductController extends BaseController {
-    private productService = new ProductService();
+export class OrderController extends BaseController {
+    private orderService = new OrderService();
 
     async create(req: Request, res: Response) {
         try {
-            const product = await this.productService.create(req.body);
+            const order = await this.orderService.create(req.body);
 
             return this.success(
                 res,
-                product,
-                "Product created successfully",
+                order,
+                "Order created successfully",
                 201
             );
         } catch (error) {
@@ -22,12 +22,12 @@ export class ProductController extends BaseController {
 
     async findAll(req: Request, res: Response) {
         try {
-            const products = await this.productService.findAll();
+            const orders = await this.orderService.findAll();
 
             return this.success(
                 res,
-                products,
-                "Products fetched successfully"
+                orders,
+                "Orders fetched successfully"
             );
         } catch (error) {
             return this.error(res, error);
@@ -37,42 +37,42 @@ export class ProductController extends BaseController {
     async findById(req: Request, res: Response) {
         try {
             const id = Number(req.params.id);
-            const product = await this.productService.findById(id);
+            const order = await this.orderService.findById(id);
 
             return this.success(
                 res,
-                product,
-                "Product fetched successfully"
+                order,
+                "Order fetched successfully"
             );
         } catch (error) {
             return this.error(res, error, 404);
         }
     }
 
-    async update(req: Request, res: Response) {
+    async confirm(req: Request, res: Response) {
         try {
             const id = Number(req.params.id);
-            const updatedProduct = await this.productService.update(id, req.body);
+            const result = await this.orderService.confirm(id);
 
             return this.success(
                 res,
-                updatedProduct,
-                "Product updated successfully"
+                result,
+                "Order confirmed successfully"
             );
         } catch (error) {
             return this.error(res, error, 400);
         }
     }
 
-    async delete(req: Request, res: Response) {
+    async cancel(req: Request, res: Response) {
         try {
             const id = Number(req.params.id);
-            const result = await this.productService.delete(id);
+            const result = await this.orderService.cancel(id);
 
             return this.success(
                 res,
                 result,
-                "Product deleted successfully"
+                "Order cancelled successfully"
             );
         } catch (error) {
             return this.error(res, error, 400);

@@ -1,77 +1,38 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: May 29, 2026 at 04:01 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Complete seed data for all 11 tables
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Disable foreign key checks
+SET FOREIGN_KEY_CHECKS = 0;
 
+-- Clear existing data
+TRUNCATE TABLE activity_logs;
+TRUNCATE TABLE shipments;
+TRUNCATE TABLE payments;
+TRUNCATE TABLE order_items;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE inventories;
+TRUNCATE TABLE customers;
+TRUNCATE TABLE products;
+TRUNCATE TABLE categories;
+TRUNCATE TABLE warehouses;
+TRUNCATE TABLE users;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `sale_db`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `first_name` varchar(100) NOT NULL,
-  `last_name` varchar(100) NOT NULL,
-  `is_active` tinyint(1) DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+-- Re-enable foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;
 
 --
 -- Data for table `users`
 --
-INSERT INTO `users` (`email`, `password`, `first_name`, `last_name`, `is_active`, `created_at`) VALUES
-  ('alice@example.com', '$2b$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Alice', 'Johnson', 1, '2026-05-01 08:15:00'),
-  ('bob@example.com', '$2b$10$bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'Bob', 'Martinez', 1, '2026-05-02 09:20:00'),
-  ('carol@example.com', '$2b$10$cccccccccccccccccccccccccccccccccccccccccccccc', 'Carol', 'Nguyen', 1, '2026-05-03 10:25:00'),
-  ('david@example.com', '$2b$10$dddddddddddddddddddddddddddddddddddddddddddddd', 'David', 'Smith', 1, '2026-05-04 11:30:00'),
-  ('emma@example.com', '$2b$10$eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 'Emma', 'Garcia', 1, '2026-05-05 12:35:00'),
-  ('frank@example.com', '$2b$10$ffffffffffffffffffffffffffffffffffffffffffffff', 'Frank', 'Kim', 1, '2026-05-06 13:40:00'),
-  ('grace@example.com', '$2b$10$gggggggggggggggggggggggggggggggggggggggggggggg', 'Grace', 'Patel', 1, '2026-05-07 14:45:00'),
-  ('henry@example.com', '$2b$10$hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh', 'Henry', 'Brown', 1, '2026-05-08 15:50:00'),
-  ('irene@example.com', '$2b$10$iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', 'Irene', 'Lopez', 1, '2026-05-09 16:55:00'),
-  ('jason@example.com', '$2b$10$jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj', 'Jason', 'Davis', 1, '2026-05-10 17:00:00');
+INSERT INTO `users` (`user_id`, `email`, `password`, `first_name`, `last_name`, `is_active`, `created_at`) VALUES
+  (1, 'alice@example.com', '$2b$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Alice', 'Johnson', 1, '2026-05-01 08:15:00'),
+  (2, 'bob@example.com', '$2b$10$bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'Bob', 'Martinez', 1, '2026-05-02 09:20:00'),
+  (3, 'carol@example.com', '$2b$10$cccccccccccccccccccccccccccccccccccccccccccccc', 'Carol', 'Nguyen', 1, '2026-05-03 10:25:00'),
+  (4, 'david@example.com', '$2b$10$dddddddddddddddddddddddddddddddddddddddddddddd', 'David', 'Smith', 1, '2026-05-04 11:30:00'),
+  (5, 'emma@example.com', '$2b$10$eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 'Emma', 'Garcia', 1, '2026-05-05 12:35:00'),
+  (6, 'frank@example.com', '$2b$10$ffffffffffffffffffffffffffffffffffffffffffffff', 'Frank', 'Kim', 1, '2026-05-06 13:40:00'),
+  (7, 'grace@example.com', '$2b$10$gggggggggggggggggggggggggggggggggggggggggggggg', 'Grace', 'Patel', 1, '2026-05-07 14:45:00'),
+  (8, 'henry@example.com', '$2b$10$hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh', 'Henry', 'Brown', 1, '2026-05-08 15:50:00'),
+  (9, 'irene@example.com', '$2b$10$iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', 'Irene', 'Lopez', 1, '2026-05-09 16:55:00'),
+  (10, 'jason@example.com', '$2b$10$jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj', 'Jason', 'Davis', 1, '2026-05-10 17:00:00');
 
 --
 -- Data for table `categories`
@@ -222,9 +183,3 @@ INSERT INTO `activity_logs` (`log_id`, `user_id`, `action`, `description`, `ip_a
   (8, 3, 'logout', 'User logged out', '192.168.1.102', '2026-05-15 11:00:00'),
   (9, 6, 'payment_processed', 'Payment processed for order #6', '192.168.1.105', '2026-05-15 11:45:00'),
   (10, 7, 'login', 'User logged in', '192.168.1.106', '2026-05-15 12:15:00');
-COMMIT;
-
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

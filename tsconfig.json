@@ -1,0 +1,22 @@
+{
+  "name": "project_node_sale-ecommerce",
+  "version": "1.0.0",
+  "description": "Backend API using Express.js, TypeScript, MySQL, Singleton Database Pattern, Repository-Service-Controller Architecture, and bcrypt authentication.",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "target": "ES6",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+    
+  }
+}
