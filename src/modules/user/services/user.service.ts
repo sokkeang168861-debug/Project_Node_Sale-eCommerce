@@ -7,27 +7,37 @@ export class UserService {
     private userRepository = new UserRepository();
 
     async create(data: User) {
+        const normalizedData: User = {
+            ...data,
+            is_active: data.is_active ?? true
+        };
 
-        // check email exists
-        const existingUser = await this.userRepository.findByEmail(
-            data.email
+        const existingEmail = await this.userRepository.findByEmail(
+            normalizedData.email
         );
 
-        if (existingUser.length > 0) {
+        if (existingEmail.length > 0) {
             throw new Error("Email already exists");
         }
 
-        // hash password
+        const existingUsername = await this.userRepository.findByUsername(
+            normalizedData.username
+        );
+
+        if (existingUsername.length > 0) {
+            throw new Error("Username already exists");
+        }
+
         const saltRounds = 10;
 
         const hashedPassword = await bcrypt.hash(
-            data.password,
+            normalizedData.password,
             saltRounds
         );
 
-        data.password = hashedPassword;
+        normalizedData.password = hashedPassword;
 
-        return await this.userRepository.create(data);
+        return await this.userRepository.create(normalizedData);
     }
 
     async findAll() {
@@ -39,6 +49,31 @@ export class UserService {
     }
 
     async update(id: number, data: Partial<User>) {
+        if (data.email) {
+            const existingEmail = await this.userRepository.findByEmail(data.email);
+
+            if (existingEmail.length > 0 && existingEmail[0].id !== id) {
+                throw new Error("Email already exists");
+            }
+        }
+
+        if (data.username) {
+            const existingUsername = await this.userRepository.findByUsername(data.username);
+
+            if (existingUsername.length > 0 && existingUsername[0].id !== id) {
+                throw new Error("Username already exists");
+            }
+        }
+
+        if (data.password) {
+            const saltRounds = 10;
+
+            data.password = await bcrypt.hash(
+                data.password,
+                saltRounds
+            );
+        }
+
         return await this.userRepository.update(id, data);
     }
 

@@ -1,25 +1,24 @@
 import { Request, Response } from "express";
-import { BaseController } from "./base.controller.js";
-import { UserService } from "../services/user.service.js";
-import { User } from "../models/user.model.js";
+import { BaseController } from "../../user/controllers/base.controller.js";
+import { RoleService } from "../services/role.service.js";
+import { Role } from "../models/role.model.js";
 
-export class UserController extends BaseController {
+export class RoleController extends BaseController {
 
-    private userService = new UserService();
+    private roleService = new RoleService();
 
-    // CREATE
     async create(req: Request, res: Response) {
 
         try {
 
-            const user = await this.userService.create(
-                req.body as User
+            const role = await this.roleService.create(
+                req.body as Role
             );
 
             return this.success(
                 res,
-                user,
-                "User created successfully",
+                role,
+                "Role created successfully",
                 201
             );
 
@@ -29,17 +28,16 @@ export class UserController extends BaseController {
         }
     }
 
-    // READ ALL
     async findAll(req: Request, res: Response) {
 
         try {
 
-            const users = await this.userService.findAll();
+            const roles = await this.roleService.findAll();
 
             return this.success(
                 res,
-                users,
-                "Users fetched successfully"
+                roles,
+                "Roles fetched successfully"
             );
 
         } catch (error) {
@@ -48,19 +46,18 @@ export class UserController extends BaseController {
         }
     }
 
-    // READ BY ID
     async findById(req: Request, res: Response) {
 
         try {
 
             const id = Number(req.params.id);
 
-            const user = await this.userService.findById(id);
+            const role = await this.roleService.findById(id);
 
             return this.success(
                 res,
-                user,
-                "User fetched successfully"
+                role,
+                "Role fetched successfully"
             );
 
         } catch (error) {
@@ -69,23 +66,21 @@ export class UserController extends BaseController {
         }
     }
 
-    // UPDATE
     async update(req: Request, res: Response) {
 
         try {
 
             const id = Number(req.params.id);
 
-            const updatedUser =
-                await this.userService.update(
-                    id,
-                    req.body as Partial<User>
-                );
+            const updatedRole = await this.roleService.update(
+                id,
+                req.body as Partial<Role>
+            );
 
             return this.success(
                 res,
-                updatedUser,
-                "User updated successfully"
+                updatedRole,
+                "Role updated successfully"
             );
 
         } catch (error) {
@@ -94,20 +89,18 @@ export class UserController extends BaseController {
         }
     }
 
-    // DELETE
     async delete(req: Request, res: Response) {
 
         try {
 
             const id = Number(req.params.id);
 
-            const result =
-                await this.userService.delete(id);
+            const result = await this.roleService.delete(id);
 
             return this.success(
                 res,
                 result,
-                "User deleted successfully"
+                "Role deleted successfully"
             );
 
         } catch (error) {
