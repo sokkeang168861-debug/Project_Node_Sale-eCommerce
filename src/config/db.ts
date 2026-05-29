@@ -1,16 +1,27 @@
-import mongoose from "mongoose";
+import mysql, { Pool } from "mysql2/promise";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 class Database {
-
     private static instance: Database;
+    private pool: Pool;
 
-    private constructor() {}
+    private constructor() {
+        this.pool = mysql.createPool({
+            host: process.env.DB_HOST,
+            port: Number(process.env.DB_PORT),
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0
+        });
+    }
 
     public static getInstance(): Database {
-
         if (!Database.instance) {
             Database.instance = new Database();
         }
@@ -18,22 +29,8 @@ class Database {
         return Database.instance;
     }
 
-    public async connect(): Promise<void> {
-
-        try {
-
-            await mongoose.connect(
-                `${process.env.MONGO_URI}/${process.env.DB_NAME}`
-            );
-
-            console.log("MongoDB Connected");
-
-        } catch (error) {
-
-            console.log(error);
-
-            process.exit(1);
-        }
+    public getPool(): Pool {
+        return this.pool;
     }
 }
 

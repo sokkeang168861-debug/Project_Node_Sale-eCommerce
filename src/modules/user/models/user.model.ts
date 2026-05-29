@@ -1,39 +1,15 @@
-import mongoose from "mongoose";
+export interface User {
+    user_id?: number;
 
-const userSchema = new mongoose.Schema(
-    {
-        email: {
-            type: String,
-            required: true,
-            unique: true
-        },
+    email: string;
 
-        password: {
-            type: String,
-            required: true
-        },
+    password: string;
 
-        first_name: {
-            type: String,
-            required: true
-        },
+    first_name: string;
 
-        last_name: {
-            type: String,
-            required: true
-        },
+    last_name: string;
 
-        is_active: {
-            type: Boolean,
-            default: true
-        }
-    },
-    {
-        timestamps: {
-            createdAt: "created_at",
-            updatedAt: false
-        }
-    }
-);
+    is_active?: boolean;
 
-export const User = mongoose.model("User", userSchema);
+    created_at?: Date;
+}
