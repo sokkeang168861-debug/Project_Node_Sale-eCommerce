@@ -1,29 +1,23 @@
 import Database from "../../../config/db.js";
-import { User } from "../models/user.model.js";
+import { Role } from "../models/role.model.js";
 import { RowDataPacket } from "mysql2";
 
-export class UserRepository {
+export class RoleRepository {
     private db = Database.getInstance().getPool();
 
-    async create(data: User) {
+    async create(data: Role) {
 
         const sql = `
-            INSERT INTO users (
-                role_id,
-                username,
-                email,
-                password,
-                is_active
+            INSERT INTO roles (
+                name,
+                permissions
             )
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?)
         `;
 
         const values = [
-            data.role_id,
-            data.username,
-            data.email,
-            data.password,
-            data.is_active ?? true
+            data.name,
+            JSON.stringify(data.permissions ?? null)
         ];
 
         const [result] = await this.db.execute(sql, values);
@@ -33,7 +27,7 @@ export class UserRepository {
 
     async findAll() {
         const [rows] = await this.db.query(
-            "SELECT * FROM users"
+            "SELECT * FROM roles"
         );
 
         return rows;
@@ -41,25 +35,38 @@ export class UserRepository {
 
     async findById(id: number) {
         const [rows] = await this.db.query(
-            "SELECT * FROM users WHERE id = ?",
+            "SELECT * FROM roles WHERE id = ?",
             [id]
         );
 
         return rows;
     }
 
-    async update(id: number, data: Partial<User>) {
+    async update(id: number, data: Partial<Role>) {
         const fields = Object.entries(data).filter(([, value]) => value !== undefined);
 
         if (fields.length === 0) {
             return { affectedRows: 0 };
         }
 
-        const setClause = fields.map(([key]) => `${key} = ?`).join(", ");
-        const values = fields.map(([, value]) => value);
+        const setClause = fields.map(([key]) => {
+            if (key === "permissions") {
+                return `${key} = JSON(?)`;
+            }
+
+            return `${key} = ?`;
+        }).join(", ");
+
+        const values = fields.map(([, value]) => {
+            if (value && typeof value === "object" && !(value instanceof Date)) {
+                return JSON.stringify(value);
+            }
+
+            return value;
+        });
 
         const sql = `
-            UPDATE users
+            UPDATE roles
             SET ${setClause}
             WHERE id = ?
         `;
@@ -72,30 +79,20 @@ export class UserRepository {
     async delete(id: number) {
 
         const sql = `
-        DELETE FROM users
-        WHERE id = ?
-    `;
+            DELETE FROM roles
+            WHERE id = ?
+        `;
 
         const [result] = await this.db.execute(sql, [id]);
 
         return result;
     }
 
-    async findByEmail(email: string) {
+    async findByName(name: string) {
 
         const [rows] = await this.db.execute<RowDataPacket[]>(
-            "SELECT * FROM users WHERE email = ?",
-            [email]
-        );
-
-        return rows;
-    }
-
-    async findByUsername(username: string) {
-
-        const [rows] = await this.db.execute<RowDataPacket[]>(
-            "SELECT * FROM users WHERE username = ?",
-            [username]
+            "SELECT * FROM roles WHERE name = ?",
+            [name]
         );
 
         return rows;
