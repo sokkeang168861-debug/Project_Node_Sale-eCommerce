@@ -9,20 +9,23 @@ export class UserRepository {
 
         const sql = `
             INSERT INTO users (
-                email,
-                password,
                 first_name,
                 last_name,
-                is_active
+                email,
+                password,
+                role_id,
+                is_active,
+                created_at
             )
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, NOW())
         `;
 
         const values = [
-            data.email,
-            data.password,
             data.first_name,
             data.last_name,
+            data.email,
+            data.password,
+            data.role_id,
             data.is_active ?? true
         ];
 
@@ -41,7 +44,7 @@ export class UserRepository {
 
     async findById(id: number) {
         const [rows] = await this.db.query(
-            "SELECT * FROM users WHERE user_id = ?",
+            "SELECT * FROM users WHERE id = ?",
             [id]
         );
 
@@ -56,14 +59,18 @@ export class UserRepository {
             first_name = ?,
             last_name = ?,
             email = ?,
+            password = ?,
+            role_id = ?,
             is_active = ?
-        WHERE user_id = ?
+        WHERE id = ?
     `;
 
         const values = [
             data.first_name,
             data.last_name,
             data.email,
+            data.password,
+            data.role_id,
             data.is_active,
             id
         ];
@@ -77,7 +84,7 @@ export class UserRepository {
 
         const sql = `
         DELETE FROM users
-        WHERE user_id = ?
+        WHERE id = ?
     `;
 
         const [result] = await this.db.execute(sql, [id]);
@@ -93,4 +100,6 @@ export class UserRepository {
 
         return rows;
     }
-}
+}         
+
+
