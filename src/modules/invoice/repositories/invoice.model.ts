@@ -15,8 +15,8 @@ export class InvoiceRepository {
             INSERT INTO payments (
                 order_id,
                 amount,
-                payment_method,
-                payment_status,
+                method,
+                status,
                 transaction_id,
                 created_at
             ) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
@@ -25,8 +25,8 @@ export class InvoiceRepository {
         const values: any[] = [
             orderId,
             data.amount,
-            data.payment_method,
-            data.payment_status ?? "pending",
+            data.method,
+            data.status ?? "pending",
             data.transaction_id ?? null
         ];
 

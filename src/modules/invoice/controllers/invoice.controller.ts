@@ -21,22 +21,10 @@ export class InvoiceController extends BaseController {
 
     async createPayment(req: Request, res: Response) {
         try {
-            const orderId = Number(req.params.id);
-            const { amount, payment_method, payment_status, transaction_id } = req.body;
-
-            if (Number.isNaN(orderId) || !amount || !payment_method) {
-                throw new Error("Invalid order ID, amount, or payment method");
-            }
-
-            const payment = {
-                order_id: orderId,
-                amount,
-                payment_method,
-                payment_status,
-                transaction_id
-            };
-
-            const result = await this.invoiceService.createPayment(orderId, payment);
+            const result = await this.invoiceService.createPayment(
+                req.params.id,
+                req.body
+            );
 
             return this.success(
                 res,

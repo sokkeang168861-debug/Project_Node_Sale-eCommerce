@@ -50,9 +50,7 @@ export class RoleController extends BaseController {
 
         try {
 
-            const id = Number(req.params.id);
-
-            const role = await this.roleService.findById(id);
+            const role = await this.roleService.findById(req.params.id);
 
             return this.success(
                 res,
@@ -70,10 +68,8 @@ export class RoleController extends BaseController {
 
         try {
 
-            const id = Number(req.params.id);
-
             const updatedRole = await this.roleService.update(
-                id,
+                req.params.id,
                 req.body as Partial<Role>
             );
 
@@ -93,9 +89,7 @@ export class RoleController extends BaseController {
 
         try {
 
-            const id = Number(req.params.id);
-
-            const result = await this.roleService.delete(id);
+            const result = await this.roleService.delete(req.params.id);
 
             return this.success(
                 res,

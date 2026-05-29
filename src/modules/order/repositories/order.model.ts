@@ -8,16 +8,16 @@ export class OrderRepository {
         const sql = `
             INSERT INTO orders (
                 customer_id,
-                total_amount,
-                order_status
+                total,
+                status
             )
             VALUES (?, ?, ?)
         `;
 
         const values: any[] = [
             data.customer_id,
-            data.total_amount,
-            data.order_status ?? "pending"
+            data.total,
+            data.status ?? "pending"
         ];
 
         const [result] = await this.db.execute(sql, values);
@@ -33,7 +33,7 @@ export class OrderRepository {
 
     async findById(id: number) {
         const [rows] = await this.db.query(
-            "SELECT * FROM orders WHERE order_id = ?",
+            "SELECT * FROM orders WHERE id = ?",
             [id]
         );
 
@@ -43,8 +43,8 @@ export class OrderRepository {
     async updateStatus(id: number, status: string) {
         const sql = `
             UPDATE orders
-            SET order_status = ?
-            WHERE order_id = ?
+            SET status = ?
+            WHERE id = ?
         `;
 
         const [result] = await this.db.execute(sql, [status, id]);

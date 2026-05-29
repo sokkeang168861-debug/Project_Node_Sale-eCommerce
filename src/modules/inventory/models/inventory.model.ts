@@ -1,8 +1,8 @@
 export interface Inventory {
-    inventory_id?: number;
+    id?: number;
+    warehouse_id: number;
     product_id: number;
-    warehouse_id?: number;
-    quantity_on_hand: number;
-    reorder_level?: number;
-    updated_at?: string;
+    quantity: number;
+    stock_quantity?: number;
+    created_at?: string;
 }

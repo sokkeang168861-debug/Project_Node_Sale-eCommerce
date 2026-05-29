@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js";
 import { UserRepository } from "../respositories/user.repository";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
+import { parseId } from "../../../utils/parseId";
 
 export class UserService {
 
@@ -44,15 +45,17 @@ export class UserService {
         return await this.userRepository.findAll();
     }
 
-    async findById(id: number) {
-        return await this.userRepository.findById(id);
+    async findById(id: string | string[] | number) {
+        return await this.userRepository.findById(parseId(id));
     }
 
-    async update(id: number, data: Partial<User>) {
+    async update(id: string | string[] | number, data: Partial<User>) {
+        const userId = parseId(id);
+
         if (data.email) {
             const existingEmail = await this.userRepository.findByEmail(data.email);
 
-            if (existingEmail.length > 0 && existingEmail[0].id !== id) {
+            if (existingEmail.length > 0 && existingEmail[0].id !== userId) {
                 throw new Error("Email already exists");
             }
         }
@@ -60,7 +63,7 @@ export class UserService {
         if (data.username) {
             const existingUsername = await this.userRepository.findByUsername(data.username);
 
-            if (existingUsername.length > 0 && existingUsername[0].id !== id) {
+            if (existingUsername.length > 0 && existingUsername[0].id !== userId) {
                 throw new Error("Username already exists");
             }
         }
@@ -74,10 +77,10 @@ export class UserService {
             );
         }
 
-        return await this.userRepository.update(id, data);
+        return await this.userRepository.update(userId, data);
     }
 
-    async delete(id: number) {
-        return await this.userRepository.delete(id);
+    async delete(id: string | string[] | number) {
+        return await this.userRepository.delete(parseId(id));
     }
 }

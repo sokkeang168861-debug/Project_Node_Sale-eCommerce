@@ -1,7 +1,7 @@
 export interface Order {
-    order_id?: number;
+    id?: number;
     customer_id: number;
-    total_amount: number;
-    order_status?: string;
+    total: number;
+    status?: string;
     created_at?: string;
 }

@@ -53,9 +53,7 @@ export class UserController extends BaseController {
 
         try {
 
-            const id = Number(req.params.id);
-
-            const user = await this.userService.findById(id);
+            const user = await this.userService.findById(req.params.id);
 
             return this.success(
                 res,
@@ -74,11 +72,9 @@ export class UserController extends BaseController {
 
         try {
 
-            const id = Number(req.params.id);
-
             const updatedUser =
                 await this.userService.update(
-                    id,
+                    req.params.id,
                     req.body as Partial<User>
                 );
 
@@ -99,10 +95,8 @@ export class UserController extends BaseController {
 
         try {
 
-            const id = Number(req.params.id);
-
             const result =
-                await this.userService.delete(id);
+                await this.userService.delete(req.params.id);
 
             return this.success(
                 res,

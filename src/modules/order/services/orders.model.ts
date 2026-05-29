@@ -1,5 +1,6 @@
 import { Order } from "../models/order.model.js";
 import { OrderRepository } from "../repositories/order.model.js";
+import { parseId } from "../../../utils/parseId";
 
 export class OrderService {
     private orderRepository = new OrderRepository();
@@ -12,15 +13,15 @@ export class OrderService {
         return await this.orderRepository.findAll();
     }
 
-    async findById(id: number) {
-        return await this.orderRepository.findById(id);
+    async findById(id: string | string[] | number) {
+        return await this.orderRepository.findById(parseId(id));
     }
 
-    async confirm(id: number) {
-        return await this.orderRepository.updateStatus(id, "confirmed");
+    async confirm(id: string | string[] | number) {
+        return await this.orderRepository.updateStatus(parseId(id), "confirmed");
     }
 
-    async cancel(id: number) {
-        return await this.orderRepository.updateStatus(id, "cancelled");
+    async cancel(id: string | string[] | number) {
+        return await this.orderRepository.updateStatus(parseId(id), "cancelled");
     }
 }

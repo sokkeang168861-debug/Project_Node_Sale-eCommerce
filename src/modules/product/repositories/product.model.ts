@@ -9,19 +9,17 @@ export class ProductRepository {
             INSERT INTO products (
                 name,
                 description,
-                category_id,
                 price,
-                stock_quantity
+                category_id
             )
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?)
         `;
 
         const values: (string | number | null)[] = [
-            data.name ?? null,
+            data.name,
             data.description ?? null,
-            data.category_id ?? null,
-            data.price ?? null,
-            data.stock_quantity ?? null
+            data.price,
+            data.category_id
         ];
 
         const [result] = await this.db.execute(sql, values);
@@ -39,7 +37,7 @@ export class ProductRepository {
 
     async findById(id: number) {
         const [rows] = await this.db.query(
-            "SELECT * FROM products WHERE product_id = ?",
+            "SELECT * FROM products WHERE id = ?",
             [id]
         );
 
@@ -52,18 +50,16 @@ export class ProductRepository {
             SET
                 name = COALESCE(?, name),
                 description = COALESCE(?, description),
-                category_id = COALESCE(?, category_id),
                 price = COALESCE(?, price),
-                stock_quantity = COALESCE(?, stock_quantity)
-            WHERE product_id = ?
+                category_id = COALESCE(?, category_id)
+            WHERE id = ?
         `;
 
         const values: (string | number | null)[] = [
             data.name ?? null,
             data.description ?? null,
-            data.category_id ?? null,
             data.price ?? null,
-            data.stock_quantity ?? null,
+            data.category_id ?? null,
             id
         ];
 
@@ -75,7 +71,7 @@ export class ProductRepository {
     async delete(id: number) {
         const sql = `
             DELETE FROM products
-            WHERE product_id = ?
+            WHERE id = ?
         `;
 
         const [result] = await this.db.execute(sql, [id]);

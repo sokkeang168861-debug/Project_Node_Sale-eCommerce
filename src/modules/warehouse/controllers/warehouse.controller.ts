@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
 import { BaseController } from "../../user/controllers/base.controller.js";
-import { ProductService } from "../services/products.model.js";
+import { WarehouseService } from "../services/warehouses.model.js";
 
-export class ProductController extends BaseController {
-    private productService = new ProductService();
+export class WarehouseController extends BaseController {
+    private warehouseService = new WarehouseService();
 
     async create(req: Request, res: Response) {
         try {
-            const product = await this.productService.create(req.body);
+            const warehouse = await this.warehouseService.create(req.body);
 
             return this.success(
                 res,
-                product,
-                "Product created successfully",
+                warehouse,
+                "Warehouse created successfully",
                 201
             );
         } catch (error) {
@@ -22,12 +22,12 @@ export class ProductController extends BaseController {
 
     async findAll(req: Request, res: Response) {
         try {
-            const products = await this.productService.findAll();
+            const warehouses = await this.warehouseService.findAll();
 
             return this.success(
                 res,
-                products,
-                "Products fetched successfully"
+                warehouses,
+                "Warehouses fetched successfully"
             );
         } catch (error) {
             return this.error(res, error);
@@ -36,12 +36,12 @@ export class ProductController extends BaseController {
 
     async findById(req: Request, res: Response) {
         try {
-            const product = await this.productService.findById(req.params.id);
+            const warehouse = await this.warehouseService.findById(req.params.id);
 
             return this.success(
                 res,
-                product,
-                "Product fetched successfully"
+                warehouse,
+                "Warehouse fetched successfully"
             );
         } catch (error) {
             return this.error(res, error, 404);
@@ -50,12 +50,12 @@ export class ProductController extends BaseController {
 
     async update(req: Request, res: Response) {
         try {
-            const updatedProduct = await this.productService.update(req.params.id, req.body);
+            const updatedWarehouse = await this.warehouseService.update(req.params.id, req.body);
 
             return this.success(
                 res,
-                updatedProduct,
-                "Product updated successfully"
+                updatedWarehouse,
+                "Warehouse updated successfully"
             );
         } catch (error) {
             return this.error(res, error, 400);
@@ -64,12 +64,12 @@ export class ProductController extends BaseController {
 
     async delete(req: Request, res: Response) {
         try {
-            const result = await this.productService.delete(req.params.id);
+            const result = await this.warehouseService.delete(req.params.id);
 
             return this.success(
                 res,
                 result,
-                "Product deleted successfully"
+                "Warehouse deleted successfully"
             );
         } catch (error) {
             return this.error(res, error, 400);

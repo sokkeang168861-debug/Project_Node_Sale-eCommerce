@@ -21,14 +21,10 @@ export class InventoryController extends BaseController {
 
     async adjust(req: Request, res: Response) {
         try {
-            const sku = Number(req.params.sku);
-            const adjustment = Number(req.body.adjustment);
-
-            if (Number.isNaN(sku) || Number.isNaN(adjustment)) {
-                throw new Error("Invalid SKU or adjustment value");
-            }
-
-            const result = await this.inventoryService.adjust(sku, adjustment);
+            const result = await this.inventoryService.adjust(
+                req.params.sku,
+                req.body.adjustment
+            );
 
             return this.success(
                 res,

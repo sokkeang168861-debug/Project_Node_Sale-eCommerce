@@ -36,8 +36,7 @@ export class OrderController extends BaseController {
 
     async findById(req: Request, res: Response) {
         try {
-            const id = Number(req.params.id);
-            const order = await this.orderService.findById(id);
+            const order = await this.orderService.findById(req.params.id);
 
             return this.success(
                 res,
@@ -51,8 +50,7 @@ export class OrderController extends BaseController {
 
     async confirm(req: Request, res: Response) {
         try {
-            const id = Number(req.params.id);
-            const result = await this.orderService.confirm(id);
+            const result = await this.orderService.confirm(req.params.id);
 
             return this.success(
                 res,
@@ -66,8 +64,7 @@ export class OrderController extends BaseController {
 
     async cancel(req: Request, res: Response) {
         try {
-            const id = Number(req.params.id);
-            const result = await this.orderService.cancel(id);
+            const result = await this.orderService.cancel(req.params.id);
 
             return this.success(
                 res,
