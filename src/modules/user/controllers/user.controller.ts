@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { BaseController } from "../../../common/controllers/base.controller.js";
 import { UserService } from "../services/user.service.js";
+import { User } from "../models/user.model.js";
 
 export class UserController extends BaseController {
 
@@ -12,7 +13,7 @@ export class UserController extends BaseController {
         try {
 
             const user = await this.userService.create(
-                req.body
+                req.body as User
             );
 
             return this.success(
@@ -52,9 +53,7 @@ export class UserController extends BaseController {
 
         try {
 
-            const id = Number(req.params.id);
-
-            const user = await this.userService.findById(id);
+            const user = await this.userService.findById(req.params.id);
 
             return this.success(
                 res,
@@ -73,12 +72,10 @@ export class UserController extends BaseController {
 
         try {
 
-            const id = Number(req.params.id);
-
             const updatedUser =
                 await this.userService.update(
-                    id,
-                    req.body
+                    req.params.id,
+                    req.body as Partial<User>
                 );
 
             return this.success(
@@ -98,10 +95,8 @@ export class UserController extends BaseController {
 
         try {
 
-            const id = Number(req.params.id);
-
             const result =
-                await this.userService.delete(id);
+                await this.userService.delete(req.params.id);
 
             return this.success(
                 res,

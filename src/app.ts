@@ -1,28 +1,27 @@
-import express  from "express";
+import express, { Application } from "express";
+import cors from "cors";
 import router from "./modules/routes";
 
-const app = express();
+const app: Application = express();
+
+// Middleware
+app.use(cors({
+    origin: "http://127.0.0.1:5500",
+    credentials: true
+}));
 
 app.use(express.json());
 
-// JSON parse error handler
-app.use((err: any, req: any, res: any, next: any) => {
-    if (err instanceof SyntaxError && 'body' in err) {
-        return res.status(400).json({
-            success: false,
-            message: "Invalid JSON format",
-            errors: [
-                {
-                    field: "body",
-                    message: err.message
-                }
-            ],
-            data: null
-        });
-    }
-    next(err);
+// Health check route
+app.get("/", (_req, res) => {
+    res.json({
+        status: "OK",
+        message: "Sale API is running",
+        version: "1.0.0"
+    });
 });
 
-app.use('/api', router);
+// API routes
+app.use("/api", router);
 
 export default app;

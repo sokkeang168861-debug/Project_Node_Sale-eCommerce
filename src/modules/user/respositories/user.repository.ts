@@ -9,26 +9,29 @@ export class UserRepository {
 
         const sql = `
             INSERT INTO users (
+                role_id,
+                username,
                 email,
                 password,
-                first_name,
-                last_name,
                 is_active
             )
             VALUES (?, ?, ?, ?, ?)
         `;
 
         const values = [
+            data.role_id,
+            data.username,
             data.email,
             data.password,
-            data.first_name,
-            data.last_name,
             data.is_active ?? true
         ];
 
-        const [result] = await this.db.execute(sql, values);
+        const [result]: any = await this.db.execute(sql, values);
 
-        return result;
+        return {
+            id: result.insertId,
+            ...data
+        };
     }
 
     async findAll() {
@@ -41,34 +44,30 @@ export class UserRepository {
 
     async findById(id: number) {
         const [rows] = await this.db.query(
-            "SELECT * FROM users WHERE user_id = ?",
+            "SELECT * FROM users WHERE id = ?",
             [id]
         );
 
         return rows;
     }
 
-    async update(id: number, data: any) {
+    async update(id: number, data: Partial<User>) {
+        const fields = Object.entries(data).filter(([, value]) => value !== undefined);
+
+        if (fields.length === 0) {
+            return { affectedRows: 0 };
+        }
+
+        const setClause = fields.map(([key]) => `${key} = ?`).join(", ");
+        const values = fields.map(([, value]) => value);
 
         const sql = `
-        UPDATE users
-        SET
-            first_name = ?,
-            last_name = ?,
-            email = ?,
-            is_active = ?
-        WHERE user_id = ?
-    `;
+            UPDATE users
+            SET ${setClause}
+            WHERE id = ?
+        `;
 
-        const values = [
-            data.first_name,
-            data.last_name,
-            data.email,
-            data.is_active,
-            id
-        ];
-
-        const [result] = await this.db.execute(sql, values);
+        const [result] = await this.db.execute(sql, [...values, id]);
 
         return result;
     }
@@ -77,13 +76,14 @@ export class UserRepository {
 
         const sql = `
         DELETE FROM users
-        WHERE user_id = ?
+        WHERE id = ?
     `;
 
         const [result] = await this.db.execute(sql, [id]);
 
         return result;
     }
+
     async findByEmail(email: string) {
 
         const [rows] = await this.db.execute<RowDataPacket[]>(
@@ -91,6 +91,16 @@ export class UserRepository {
             [email]
         );
 
-        return rows;
+        return (rows as any[])[0] || null;
+    }
+
+    async findByUsername(username: string) {
+
+        const [rows] = await this.db.execute<RowDataPacket[]>(
+            "SELECT * FROM users WHERE username = ?",
+            [username]
+        );
+
+        return (rows as any[])[0] || null;
     }
 }

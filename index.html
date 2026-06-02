@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JWT Fetch Example</title>
+</head>
+<body>
+
+    <h2>Login</h2>
+
+    <input id="email" type="text" placeholder="email">
+    <input id="password" type="password" placeholder="password">
+
+    <button onclick="login()">Login</button>
+
+    <hr>
+
+    <button onclick="getUsers()">Get Users</button>
+
+    <pre id="output"></pre>
+
+    <script>
+        const API_URL = "http://localhost:3000/api";
+
+        // =====================
+        // LOGIN
+        // =====================
+        async function login() {
+            try {
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    document.getElementById("output").innerText =
+                        "Login failed: " + data.message;
+                    return;
+                }
+
+                // SAVE TOKEN
+                localStorage.setItem("token", data.token);
+
+                document.getElementById("output").innerText =
+                    "Login success! Token saved.";
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // =====================
+        // GET USERS (PROTECTED)
+        // =====================
+        async function getUsers() {
+            try {
+                const token = localStorage.getItem("token");
+
+                if (!token) {
+                    document.getElementById("output").innerText =
+                        "No token found. Please login first.";
+                    return;
+                }
+
+                const response = await fetch(`${API_URL}/users`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                document.getElementById("output").innerText =
+                    JSON.stringify(data, null, 2);
+
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    </script>
+
+</body>
+</html>
