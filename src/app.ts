@@ -1,9 +1,18 @@
-import express  from "express";
+import express, { Application } from "express";
+import cors from "cors";
 import router from "./modules/routes";
-const app = express();
+
+const app: Application = express();
+
+// Middleware
+app.use(cors({
+    origin: "http://127.0.0.1:5500",
+    credentials: true
+}));
 
 app.use(express.json());
 
+// Health check route
 app.get("/", (_req, res) => {
     res.json({
         status: "OK",
@@ -12,6 +21,7 @@ app.get("/", (_req, res) => {
     });
 });
 
-app.use('/api', router);
+// API routes
+app.use("/api", router);
 
 export default app;

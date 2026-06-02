@@ -6,8 +6,8 @@ const PORT = Number(process.env.PORT) || 3000;
 async function startServer() {
     try {
         await Database.getInstance().getPool();
-
         app.listen(PORT, () => {
+            console.log("Database is connected!")
             console.log(`Server running on http://localhost:${PORT}`);
         });
 

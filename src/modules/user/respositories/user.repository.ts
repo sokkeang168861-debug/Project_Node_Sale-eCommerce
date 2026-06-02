@@ -26,9 +26,12 @@ export class UserRepository {
             data.is_active ?? true
         ];
 
-        const [result] = await this.db.execute(sql, values);
+        const [result]: any = await this.db.execute(sql, values);
 
-        return result;
+        return {
+            id: result.insertId,
+            ...data
+        };
     }
 
     async findAll() {
@@ -88,7 +91,7 @@ export class UserRepository {
             [email]
         );
 
-        return rows;
+        return (rows as any[])[0] || null;
     }
 
     async findByUsername(username: string) {
@@ -98,6 +101,6 @@ export class UserRepository {
             [username]
         );
 
-        return rows;
+        return (rows as any[])[0] || null;
     }
 }
