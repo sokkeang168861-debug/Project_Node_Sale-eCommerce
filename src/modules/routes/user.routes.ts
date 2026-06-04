@@ -5,12 +5,12 @@ const routes = express.Router();
 
 const controller = new UserController();
 
-routes.get("/", controller.findAll.bind(controller));
+routes.get("/",controller.findAll.bind(controller));
 
-routes.get("/:id", controller.findById.bind(controller));
+routes.get("/:id",controller.findById.bind(controller));
 
-routes.put("/:id", controller.update.bind(controller));
+routes.put("/:id",controller.update.bind(controller));
 
-routes.delete("/:id", controller.delete.bind(controller));
+routes.delete("/:id",controller.delete.bind(controller));
 
 export default routes;

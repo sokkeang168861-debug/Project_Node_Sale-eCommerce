@@ -1,12 +1,15 @@
-export type UserRole = "admin" | "manager" | "staff";
+import { UserRole } from "./user.model.js";
 
-export interface User {
-    id?: number;
+export interface UserResponse {
+    id: number;
+
     first_name: string;
     last_name: string;
+
     role: UserRole;
+
     email: string;
-    password: string;
+
     is_active?: boolean;
     created_at?: Date;
 }

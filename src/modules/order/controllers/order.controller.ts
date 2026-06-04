@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BaseController } from "../../user/controllers/base.controller.js";
+import { BaseController } from "../../../common/controllers/base.controller.js";
 import { OrderService } from "../services/orders.model.js";
 
 export class OrderController extends BaseController {

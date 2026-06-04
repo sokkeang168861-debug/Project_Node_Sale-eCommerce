@@ -68,27 +68,6 @@ export class CategoryController extends BaseController {
         }
     }
 
-    // READ BY PARENT ID
-    async findByParentId(req: Request, res: Response) {
-
-        try {
-
-            const parentId = req.query.parent_id ? Number(req.query.parent_id) : null;
-
-            const categories = await this.categoryService.findByParentId(parentId);
-
-            return this.success(
-                res,
-                categories,
-                "Categories fetched successfully"
-            );
-
-        } catch (error) {
-
-            return this.error(res, error);
-        }
-    }
-
     // UPDATE
     async update(req: Request, res: Response) {
 

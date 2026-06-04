@@ -5,7 +5,7 @@ dotenv.config();
 
 export interface TokenPayload {
     id: number;
-    role_id: number;
+    role: string;
 }
 
 export const generateToken = (

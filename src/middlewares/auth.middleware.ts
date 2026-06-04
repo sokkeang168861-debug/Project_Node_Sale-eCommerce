@@ -29,7 +29,7 @@ export const authMiddleware = (
 
         console.log("🔥 AUTH MIDDLEWARE HIT:", req.originalUrl);
         console.log("👤 USER:", req.user);
-        console.log("Role_id:", req.user.role_id);
+        console.log("Role:", req.user.role);
 
         next();
     } catch (error) {

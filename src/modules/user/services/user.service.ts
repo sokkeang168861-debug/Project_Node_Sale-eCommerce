@@ -7,40 +7,6 @@ export class UserService {
 
     private userRepository = new UserRepository();
 
-    async create(data: User) {
-        const normalizedData: User = {
-            ...data,
-            is_active: data.is_active ?? true
-        };
-
-        const existingEmail = await this.userRepository.findByEmail(
-            normalizedData.email
-        );
-
-        if (existingEmail.length > 0) {
-            throw new Error("Email already exists");
-        }
-
-        const existingUsername = await this.userRepository.findByUsername(
-            normalizedData.username
-        );
-
-        if (existingUsername.length > 0) {
-            throw new Error("Username already exists");
-        }
-
-        const saltRounds = 10;
-
-        const hashedPassword = await bcrypt.hash(
-            normalizedData.password,
-            saltRounds
-        );
-
-        normalizedData.password = hashedPassword;
-
-        return await this.userRepository.create(normalizedData);
-    }
-
     async findAll() {
         return await this.userRepository.findAll();
     }
@@ -60,14 +26,6 @@ export class UserService {
             }
         }
 
-        if (data.username) {
-            const existingUsername = await this.userRepository.findByUsername(data.username);
-
-            if (existingUsername.length > 0 && existingUsername[0].id !== userId) {
-                throw new Error("Username already exists");
-            }
-        }
-
         if (data.password) {
             const saltRounds = 10;
 
@@ -77,7 +35,7 @@ export class UserService {
             );
         }
 
-        return await this.userRepository.update(userId, data);
+        return await this.userRepository.updated(userId, data);
     }
 
     async delete(id: string | string[] | number) {

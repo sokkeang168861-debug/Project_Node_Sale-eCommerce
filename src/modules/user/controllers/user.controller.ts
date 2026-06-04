@@ -2,32 +2,11 @@ import { Request, Response } from "express";
 import { BaseController } from "../../../common/controllers/base.controller.js";
 import { UserService } from "../services/user.service.js";
 import { User } from "../models/user.model.js";
+import { toUserResponse } from "../models/user.mapper.js";
 
 export class UserController extends BaseController {
 
     private userService = new UserService();
-
-    // CREATE
-    async create(req: Request, res: Response) {
-
-        try {
-
-            const user = await this.userService.create(
-                req.body as User
-            );
-
-            return this.success(
-                res,
-                user,
-                "User created successfully",
-                201
-            );
-
-        } catch (error) {
-
-            return this.error(res, error, 400);
-        }
-    }
 
     // READ ALL
     async findAll(req: Request, res: Response) {
@@ -72,10 +51,14 @@ export class UserController extends BaseController {
 
         try {
 
+            const id = Number(req.params.id);
+
+            const { password, id: bodyId, created_at, ...safeData } = req.body;
+
             const updatedUser =
                 await this.userService.update(
-                    req.params.id,
-                    req.body as Partial<User>
+                    id,
+                    safeData
                 );
 
             return this.success(

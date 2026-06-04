@@ -1,7 +1,7 @@
 import express from "express";
 import { ProductController } from "../product/controllers/product.controller.js";
 import { authMiddleware } from "../../middlewares/auth.middleware.js";
-import { adminMiddleware } from "../../middlewares/admin.middleware.js";
+import { roleMiddleware } from "../../middlewares/role.middleware.js";
 const routes = express.Router();
 const controller = new ProductController();
 
@@ -13,21 +13,21 @@ routes.get("/:id", controller.findById.bind(controller));
 routes.post(
     "/",
     authMiddleware,
-    adminMiddleware,
+    roleMiddleware(['admin', 'manager']),
     controller.create.bind(controller)
 );
 
 routes.put(
     "/:id",
     authMiddleware,
-    adminMiddleware,
+    roleMiddleware(['admin', 'manager']),
     controller.update.bind(controller)
 );
 
 routes.delete(
     "/:id",
     authMiddleware,
-    adminMiddleware,
+    roleMiddleware(['admin', 'manager']),
     controller.delete.bind(controller)
 );;
 

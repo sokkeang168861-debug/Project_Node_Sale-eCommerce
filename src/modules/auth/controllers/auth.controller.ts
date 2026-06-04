@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { AuthService } from "../services/auth.service.js";
+import { BaseController } from "../../../common/controllers/base.controller.js";
 
-export class AuthController {
+export class AuthController extends BaseController {
 
     private authService = new AuthService();
 
@@ -9,11 +10,15 @@ export class AuthController {
         try {
             const result = await this.authService.register(req.body);
 
-            res.status(201).json(result);
-        } catch (error: any) {
-            res.status(400).json({
-                message: error.message
-            });
+            return this.success(
+                res,
+                result,
+                "User registered successfully",
+                201
+            );
+
+        } catch (error) {
+            return this.error(res, error, 400);
         }
     };
 
@@ -23,11 +28,15 @@ export class AuthController {
 
             const result = await this.authService.login(email, password);
 
-            res.status(200).json(result);
-        } catch (error: any) {
-            res.status(401).json({
-                message: error.message
-            });
+            return this.success(
+                res,
+                result,
+                "Login Successfull",
+                200
+            )
+        }catch(error) {
+            return this.error(res,error,401)
         }
-    };
+        
+    }
 }

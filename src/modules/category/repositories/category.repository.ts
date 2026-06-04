@@ -9,15 +9,13 @@ export class CategoryRepository {
         const sql = `
             INSERT INTO categories (
                 name,
-                parent_id,
                 created_at
             )
-            VALUES (?, ?, NOW())
+            VALUES (?, NOW())
         `;
 
         const values = [
-            data.name,
-            data.parent_id ?? null
+            data.name
         ];
 
         const [result] = await this.db.execute(sql, values);
@@ -47,24 +45,22 @@ export class CategoryRepository {
         return rows;
     }
 
-    async update(id: number, data: Partial<Category>) {
-        const sql = `
-            UPDATE categories
-            SET
-                name = ?,
-                parent_id = ?
-            WHERE id = ?
-        `;
+   async update(id: number, data: Partial<Category>) {
+    const sql = `
+        UPDATE categories
+        SET
+            name = ?
+        WHERE id = ?
+    `;
 
-        const values = [
-            data.name,
-            data.parent_id ?? null,
-            id
-        ];
+    const values = [
+        data.name,
+        id
+    ];
 
-        const [result] = await this.db.execute(sql, values);
-        return result;
-    }
+    const [result] = await this.db.execute(sql, values);
+    return result;
+}
 
     async delete(id: number) {
         const sql = `

@@ -1,6 +1,8 @@
 import express from "express";
 import { CategoryController } from "../category/controllers/category.controller.js";
 import { createCategorySchema, updateCategorySchema } from "../category/validations/category.js";
+import { authMiddleware } from "../../middlewares/auth.middleware.js";
+import { roleMiddleware } from "../../middlewares/role.middleware.js";
 
 const routes = express.Router();
 const controller = new CategoryController();
@@ -40,11 +42,10 @@ const validateUpdateCategory = (req: any, res: any, next: any) => {
     next();
 };
 
-routes.post("/", validateCreateCategory, controller.create.bind(controller));
+routes.post("/",authMiddleware,roleMiddleware(["admin", "manager"]), validateCreateCategory, controller.create.bind(controller));
 routes.get("/", controller.findAll.bind(controller));
-routes.get("/parent", controller.findByParentId.bind(controller));
 routes.get("/:id", controller.findById.bind(controller));
-routes.put("/:id", validateUpdateCategory, controller.update.bind(controller));
-routes.delete("/:id", controller.delete.bind(controller));
+routes.put("/:id", authMiddleware,roleMiddleware(["admin", "manager"]), validateUpdateCategory, controller.update.bind(controller));
+routes.delete("/:id",authMiddleware,roleMiddleware(["admin", "manager"]), controller.delete.bind(controller));
 
 export default routes;

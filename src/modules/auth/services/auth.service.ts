@@ -7,21 +7,36 @@ export class AuthService {
   private userRepository = new UserRepository();
 
   async register(data: any) {
+    // 1. Strict Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!data.email || data.email.trim() === "") {
+      throw new Error("Email cannot be empty");
+    }
+    if (!emailRegex.test(data.email)) {
+      throw new Error("Invalid email format");
+    }
 
-    const existingUser = await this.userRepository.findByEmail(data.email);
+    // 2. Business rule / role check
+    const allowedRoles = ["admin", "manager", "staff"] as const;
+    if (!allowedRoles.includes(data.role)) {
+      throw new Error("Invalid role");
+    }
 
-    if (existingUser) {
+    // 3. Check unique email (Assuming userRepository is injected here)
+    const existingEmail = await this.userRepository.findByEmail(data.email);
+    if (existingEmail) {
       throw new Error("Email already exists");
     }
 
+    // 4. Hash password
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    const user = await this.userRepository.create({
+    // 5. Create user with default fallback for is_active
+    return this.userRepository.create({
       ...data,
-      password: hashedPassword
+      password: hashedPassword,
+      is_active: data.is_active ?? true
     });
-
-    return user;
   }
 
   async login(email: string, password: string) {
@@ -39,8 +54,8 @@ export class AuthService {
     }
 
     const token = generateToken({
-      id: user.id,  
-      role_id: user.role_id
+      id: user.id,
+      role: user.role
     });
 
     return {
