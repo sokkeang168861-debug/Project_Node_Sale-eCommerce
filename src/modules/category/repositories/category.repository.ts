@@ -45,22 +45,26 @@ export class CategoryRepository {
         return rows;
     }
 
-   async update(id: number, data: Partial<Category>) {
-    const sql = `
-        UPDATE categories
-        SET
-            name = ?
-        WHERE id = ?
-    `;
+    async update(id: number, data: Partial<Category>) {
+        if (data.name === undefined) {
+            throw new Error("Category name is required for update");
+        }
 
-    const values = [
-        data.name,
-        id
-    ];
+        const sql = `
+            UPDATE categories
+            SET
+                name = ?
+            WHERE id = ?
+        `;
 
-    const [result] = await this.db.execute(sql, values);
-    return result;
-}
+        const values = [
+            data.name,
+            id
+        ];
+
+        const [result] = await this.db.execute(sql, values);
+        return result;
+    }
 
     async delete(id: number) {
         const sql = `
