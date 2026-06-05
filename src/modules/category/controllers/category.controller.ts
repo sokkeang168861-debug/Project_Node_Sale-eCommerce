@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { BaseController } from "../../../common/controllers/base.controller.js";
 import { CategoryService } from "../services/category.service.js";
+import { AuthRequest } from "../../../middlewares/auth.middleware.js";
 
 export class CategoryController extends BaseController {
 
@@ -11,9 +12,7 @@ export class CategoryController extends BaseController {
 
         try {
 
-            const category = await this.categoryService.create(
-                req.body
-            );
+            const category = await this.categoryService.create(req.body, req.user);
 
             return this.success(
                 res,
@@ -79,7 +78,7 @@ export class CategoryController extends BaseController {
                 await this.categoryService.update(
                     id,
                     req.body
-                );
+                , req.user);
 
             return this.success(
                 res,
@@ -100,7 +99,7 @@ export class CategoryController extends BaseController {
 
             const id = Number(req.params.id);
 
-            const deletedCategory = await this.categoryService.delete(id);
+            const deletedCategory = await this.categoryService.delete(id, req.user);
 
             return this.success(
                 res,

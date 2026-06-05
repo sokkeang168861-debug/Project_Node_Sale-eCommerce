@@ -5,7 +5,7 @@ import { RowDataPacket } from "mysql2";
 export class UserRepository {
     private db = Database.getInstance().getPool();
 
-    // Create user (Register) only admin can 
+    // only admin can create more user with any role
     async create(data: User) {
         const sql = `
         INSERT INTO users (first_name, last_name, role, email, password, is_active)
@@ -33,6 +33,32 @@ export class UserRepository {
         };
     }
 
+    // user can register
+    async register(data: User) {
+        const sql = `
+        INSERT INTO users (first_name, last_name, email, password, is_active)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+
+        const values = [
+            data.first_name,
+            data.last_name,
+            data.email,
+            data.password,
+            data.is_active ?? true
+        ];
+
+        const [result]: any = await this.db.execute(sql, values);
+
+        return {
+            id: result.insertId,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            email: data.email,
+            is_active: data.is_active ?? true,
+            role: "user" // default in response
+        };
+    }
     // Find all user but not include password for security
     async findAll() {
         const [rows] = await this.db.query(

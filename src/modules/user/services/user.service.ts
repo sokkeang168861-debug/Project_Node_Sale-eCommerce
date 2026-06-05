@@ -7,6 +7,18 @@ export class UserService {
 
     private userRepository = new UserRepository();
 
+    async create(data: any) {
+        if (!data.first_name || !data.last_name || !data.email || !data.password) {
+            throw new Error("Missing required fields");
+        }
+
+        const hashedPassword = await bcrypt.hash(data.password, 10);
+
+        return await this.userRepository.register({
+            ...data,
+            password: hashedPassword
+        });
+    }
     async findAll() {
         return await this.userRepository.findAll();
     }

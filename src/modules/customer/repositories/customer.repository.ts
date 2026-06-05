@@ -1,25 +1,25 @@
 import Database from "../../../config/db.js";
-import { Product } from "../models/product.model.js";
+import { Customer } from "../models/customer.model.js";
 
-export class ProductRepository {
+export class CustomerRepository {
     private db = Database.getInstance().getPool();
 
-    async create(data: Product) {
+    async create(data: Customer) {
         const sql = `
-            INSERT INTO products (
+            INSERT INTO customers (
+                user_id,
                 name,
-                description,
-                price,
-                category_id
+                phone,
+                address
             )
             VALUES (?, ?, ?, ?)
         `;
 
         const values: (string | number | null)[] = [
+            data.user_id,
             data.name,
-            data.description ?? null,
-            data.price,
-            data.category_id
+            data.phone,
+            data.address
         ];
 
         const [result] = await this.db.execute(sql, values);
@@ -29,7 +29,7 @@ export class ProductRepository {
 
     async findAll() {
         const [rows] = await this.db.query(
-            "SELECT * FROM products"
+            "SELECT * FROM customers"
         );
 
         return rows;
@@ -37,40 +37,53 @@ export class ProductRepository {
 
     async findById(id: number) {
         const [rows] = await this.db.query(
-            "SELECT * FROM products WHERE id = ?",
+            "SELECT * FROM customers WHERE id = ?",
             [id]
         );
 
         return rows;
     }
 
-    async update(id: number, data: Partial<Product>) {
+    async findByUserId(userId: number) {
+        const [rows] = await this.db.query(
+            "SELECT * FROM customers WHERE user_id = ?",
+            [userId]
+        );
+
+        return rows;
+    }
+
+    async update(id: number, data: Partial<Customer>) {
         const sql = `
-            UPDATE products
+            UPDATE customers
             SET
+                user_id = COALESCE(?, user_id),
                 name = COALESCE(?, name),
-                description = COALESCE(?, description),
-                price = COALESCE(?, price),
-                category_id = COALESCE(?, category_id)
+                phone = COALESCE(?, phone),
+                address = COALESCE(?, address),
+                updated_at = NOW()
             WHERE id = ?
         `;
 
         const values: (string | number | null)[] = [
+            data.user_id ?? null,
             data.name ?? null,
-            data.description ?? null,
-            data.price ?? null,
-            data.category_id ?? null,
+            data.phone ?? null,
+            data.address ?? null,
             id
         ];
 
         const [result] = await this.db.execute(sql, values);
 
-        return result;
+        return {
+            id: id,
+            name: data.name
+        };
     }
 
     async delete(id: number) {
         const sql = `
-            DELETE FROM products
+            DELETE FROM customers
             WHERE id = ?
         `;
 

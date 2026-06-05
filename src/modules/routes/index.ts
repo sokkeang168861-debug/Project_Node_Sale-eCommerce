@@ -7,17 +7,20 @@ import invoiceRoutes from "./invoice.routes.js";
 import warehouseRoutes from "./warehouse.routes.js";
 import shipmentRoutes from "./shipments.routes.js";
 import paymentRoutes from "./payments.routes.js";
+import customerRoutes from "./customer.routes.js";
+import categoryRoutes from "./category.routes.js";
 import authRoutes from "./auth.routes.js";
 import { authMiddleware } from "../../middlewares/auth.middleware.js";
 import { roleMiddleware } from "../../middlewares/role.middleware.js";
-
 const router = express.Router();
 
 // Public routes
 router.use("/auth", authRoutes);
 
 // Protected routes
-router.use("/users", authMiddleware,roleMiddleware(["admin"]), userRoutes);
+router.use("/users", userRoutes);
+router.use("/customers", customerRoutes);
+router.use('/categories', authMiddleware, roleMiddleware(['admin']), categoryRoutes)
 router.use("/products", productRoutes);
 router.use("/orders", authMiddleware, orderRoutes);
 router.use("/inventory", authMiddleware, inventoryRoutes);

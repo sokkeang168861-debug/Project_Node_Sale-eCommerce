@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { BaseController } from "../../../common/controllers/base.controller.js";
-import { ProductService } from "../services/products.model.js";
+import { ProductService } from "../services/products.service.js";
 
 export class ProductController extends BaseController {
     private productService = new ProductService();
 
     async create(req: Request, res: Response) {
         try {
-            const product = await this.productService.create(req.body);
+            const product = await this.productService.create(req.body, req.user);
 
             return this.success(
                 res,
@@ -50,7 +50,7 @@ export class ProductController extends BaseController {
 
     async update(req: Request, res: Response) {
         try {
-            const updatedProduct = await this.productService.update(req.params.id, req.body);
+            const updatedProduct = await this.productService.update(req.params.id, req.body, req.user);
 
             return this.success(
                 res,
@@ -64,7 +64,7 @@ export class ProductController extends BaseController {
 
     async delete(req: Request, res: Response) {
         try {
-            const result = await this.productService.delete(req.params.id);
+            const result = await this.productService.delete(req.params.id, req.user);
 
             return this.success(
                 res,

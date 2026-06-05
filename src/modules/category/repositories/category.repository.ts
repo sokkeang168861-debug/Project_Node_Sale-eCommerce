@@ -18,13 +18,35 @@ export class CategoryRepository {
             data.name
         ];
 
-        const [result] = await this.db.execute(sql, values);
-        return result;
+        const [result]: any = await this.db.execute(sql, values);
+
+        return {
+            id: result.insertId,
+            name: data.name
+        };
     }
 
+    async createMany(categories: Category[]) {
+        const sql = `
+        INSERT INTO categories (name, created_at)
+        VALUES ?
+    `;
+
+        const values = categories
+            .filter(c => c?.name) // REMOVE undefined
+            .map(c => [c.name, new Date()]);
+
+        if (values.length === 0) {
+            throw new Error("No valid categories");
+        }
+
+        const [result] = await this.db.query(sql, [values]);
+
+        return result;
+    }
     async findAll() {
         const [rows] = await this.db.query(
-            "SELECT * FROM categories ORDER BY parent_id, name"
+            "SELECT * FROM categories ORDER BY id, name"
         );
         return rows;
     }
@@ -37,39 +59,57 @@ export class CategoryRepository {
         return rows;
     }
 
-    async findByParentId(parentId: number | null) {
-        const [rows] = await this.db.query(
-            "SELECT * FROM categories WHERE parent_id = ? ORDER BY name",
-            [parentId]
-        );
-        return rows;
-    }
-
-   async update(id: number, data: Partial<Category>) {
-    const sql = `
+    async update(id: number, data: Partial<Category>) {
+        const sql = `
         UPDATE categories
         SET
             name = ?
         WHERE id = ?
     `;
 
-    const values = [
-        data.name,
-        id
-    ];
+        const values = [
+            data.name,
+            id
+        ];
 
-    const [result] = await this.db.execute(sql, values);
-    return result;
-}
+        const [result]: any = await this.db.execute(sql, values);
+
+        return {
+            id: result.insertId,
+            name: data.name
+        };
+    }
 
     async delete(id: number) {
-        const sql = `
-            DELETE FROM categories
-            WHERE id = ?
-        `;
+        // 1. Get category first (for logging)
+        const [rows]: any = await this.db.execute(
+            "SELECT * FROM categories WHERE id = ?",
+            [id]
+        );
 
-        const [result] = await this.db.execute(sql, [id]);
-        return result;
+        const category = rows[0];
+
+        if (!category) {
+            return {
+                success: false,
+                message: "Category not found"
+            };
+        }
+
+        // 2. Delete category
+        await this.db.execute(
+            "DELETE FROM categories WHERE id = ?",
+            [id]
+        );
+
+
+        return {
+            success: true,
+            deleted: {
+                id: category.id,
+                name: category.name
+            }
+        };
     }
 
     async findByName(name: string) {

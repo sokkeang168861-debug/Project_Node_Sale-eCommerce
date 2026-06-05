@@ -8,6 +8,15 @@ export class UserController extends BaseController {
 
     private userService = new UserService();
 
+    async register(req: Request, res: Response) {
+        try {
+            const newUser = await this.userService.create(req.body);
+
+            return this.success(res, newUser, "User created successfully", 201);
+        } catch (error) {
+            return this.error(res, error, 400);
+        }
+    }
     // READ ALL
     async findAll(req: Request, res: Response) {
 
